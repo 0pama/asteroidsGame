@@ -8,8 +8,18 @@ from shot import Shot
 
 def main():
     pygame.init()
+    
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
+
+    # Load background
+    
+    background = pygame.image.load("assets/background.png").convert()
+    background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    # score init
+    score = 0 
 
     updatable = pygame.sprite.Group()
     shots = pygame.sprite.Group()
@@ -32,6 +42,7 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
+        
         updatable.update(dt)
 
 
@@ -42,13 +53,21 @@ def main():
             for shot in shots:
                 if obj.colliding(shot):
                     obj.split()
-                    shot.kill() 
+                    shot.kill()
+                    score+= 10
+                    
 
-        screen.fill("black")
+        screen.blit(background, (0, 0))
+        
 
         for obj in drawable:
             obj.draw(screen)
 
+
+        # Display the score
+        font = pygame.font.Font(None, 40)  
+        score_text = font.render(f"Score: {score}", True, "white")
+        screen.blit(score_text, (10, 10))  
         pygame.display.flip()
 
         # limiting the framerate to 60 FPS
